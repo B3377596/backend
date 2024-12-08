@@ -1,0 +1,17 @@
+/* _home.scss */
+.home {
+    padding: 20px;
+  }
+  
+  .search-section {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .product-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }

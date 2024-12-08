@@ -1,0 +1,14 @@
+/* _profile.scss */
+.profile-page {
+    padding: 20px;
+  }
+  
+  .profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .profile-details h3 {
+    font-size: 20px;
+  }
