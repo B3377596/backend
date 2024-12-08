@@ -28,9 +28,9 @@
     </button>
     
 
-    <!-- 购买按钮 -->
-    <button type="button" v-if="!isSeller" @click="handlePurchase" class="purchase-button">立即购买</button>
-    <p v-else>你不能购买自己发布的商品</p>
+    <!-- 购买按钮 v-if="!isSeller" <p v-else>你不能购买自己发布的商品</p>-->
+    <button type="button" @click="handlePurchase" class="purchase-button">立即购买</button>
+    
     <!-- 购买表单弹出框 -->
     <div v-if="showPurchaseForm" class="purchase-form-overlay">
       <div class="purchase-form-container">

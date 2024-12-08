@@ -10,6 +10,9 @@
         <li><router-link to="/profile/favorites" @click="handleReplace('/profile/favorites')">收藏夹</router-link></li>
         <li><router-link to="/profile/reviews" @click="handleReplace('/profile/reviews')">评价</router-link></li>
       </ul>
+      <div class="logout-button">
+        <button @click="logout">登出</button>
+      </div>
     </div>
 
     <div class="profile-main">
@@ -19,6 +22,8 @@
         <h3>{{ user.username }}</h3>
         <p>评分: {{ user.rating }}</p>
       </div>
+      <!-- 登出按钮 -->
+     
 
       <!-- 显示当前子页面内容 -->
       <router-view></router-view>
@@ -42,6 +47,18 @@ export default {
     this.fetchUserProfile();  // 在组件挂载后获取用户信息
   },
   methods: {
+    logout() {
+      // 清除本地存储的用户数据
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('user_id')
+      // 清空 Vuex 状态中的用户数据
+      this.$store.dispatch('user/logout');
+
+      // 跳转到登录页面
+      this.$router.push('/');
+    },
     handleReplace(path) {
     // 使用 router.replace 来替代默认的跳转
     this.$router.replace(path);
@@ -67,66 +84,116 @@ export default {
 </script>
 
 <style scoped>
+/* 主容器 */
 .profile-container {
-  display: flex;
-  padding: 20px;
+display: flex;
+min-height: 100vh;
+background-color: #f9f9f9;
 }
 
+/* 侧边栏 */
 .sidebar {
-  width: 250px;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding: 20px;
-  background-color: #f4f4f4;
+   width: 200px;
+ height: 100vh;
+ position: fixed;
+ top: 0;
+ left: 0;
+ padding: 20px;
+ background-color: #ffffff;
+ box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+ transition: transform 0.3s ease-in-out;
 }
 
-.profile-main {
-  margin-left: 250px;
-  padding: 20px;
-  width: calc(100% - 250px);
+.sidebar.hidden {
+ transform: translateX(-100%);
 }
 
+/* 侧边栏标题 */
 .sidebar h3 {
-  margin-top: 0;
+ margin-top: 0;
+ font-size: 1.5rem;
+ color: #333;
 }
 
+/* 侧边栏菜单 */
 .sidebar ul {
-  list-style-type: none;
-  padding-left: 0;
+ list-style-type: none;
+ padding-left: 0;
+ margin-top: 20px;
 }
 
 .sidebar ul li {
-  margin-bottom: 10px;
+ margin-bottom: 10px;
 }
 
 .sidebar ul li a {
-  text-decoration: none;
-  color: #333;
+ text-decoration: none;
+ color: #333;
+ font-size: 1rem;
+ display: block;
+ padding: 10px 15px;
+ border-radius: 4px;
+ transition: background-color 0.3s, color 0.3s;
 }
 
-.sidebar ul li a:hover {
-  color: #007BFF;
+.sidebar ul li a:hover,
+.sidebar ul li a.active {
+ background-color: #e8f5ff;
+ color: #007bff;
 }
 
+/* 主内容区 */
+.profile-main {
+ margin-left: 250px;
+ padding: 20px;
+ width: calc(100% - 250px);
+ transition: margin-left 0.3s ease-in-out;
+}
+
+.sidebar.hidden + .profile-main {
+ margin-left: 0;
+}
+
+/* 用户头像和信息 */
 .profile-header {
-  margin-bottom: 20px;
+ display: flex;
+ align-items: center;
+ margin-bottom: 20px;
 }
 
 .avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin-right: 20px;
+ width: 100px;
+ height: 100px;
+ border-radius: 50%;
+ margin-right: 20px;
+ object-fit: cover; /* 确保图像不会变形 */
+ box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
 .profile-header h3 {
-  margin: 0;
-  font-size: 24px;
+ margin: 0;
+ font-size: 24px;
+ color: #333;
 }
 
 .profile-header p {
-  margin: 5px 0;
+ margin: 5px 0 0;
+ color: #666;
+}
+.logout-button {
+  margin-top: auto;  /* 使按钮始终靠底部 */
+}
+
+.logout-button button {
+  padding: 10px 20px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button button:hover {
+  background-color: #ff0000;
 }
 </style>

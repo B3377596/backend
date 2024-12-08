@@ -78,7 +78,6 @@ export default {
         localStorage.setItem('refresh_token', refresh_token);
         localStorage.setItem('user_id',user.id);
         localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('islog', true); 
         this.$store.dispatch('user/login', user) ;
         if(user.role=='admin'){
           this.$router.push('/admin');
@@ -192,6 +191,51 @@ button:hover {
 
 .register-link a:hover {
   text-decoration: underline;
+}
+
+.profile-container {
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+  padding: 20px;
+  background-color: #f4f4f4;
+}
+
+.profile-main {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-header .avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.logout-button {
+  margin-top: 20px;
+}
+
+.logout-button button {
+  padding: 10px 20px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logout-button button:hover {
+  background-color: #ff0000;
 }
 
 </style>

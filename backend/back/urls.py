@@ -6,6 +6,7 @@ from .views import CreateOrderView,ProductCreateView,CategoryListView,ProductDet
 from .views import SoldOrdersView,UserProductsView,UserFavoritesView,BoughtOrdersView,UserProfileView,PaymentView,TransportationView,CompleteOrderView,UserReviewsView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from .views import AddFavoriteView, RemoveFavoriteView, CheckFavoriteView
+from rest_framework_simplejwt import views as jwt_views
 
 def redirect_to_admin(request):
     return redirect('http://localhost:8000/admin') 
@@ -16,6 +17,7 @@ urlpatterns=[#登录注册相关
     path('api/login',LoginView.as_view()),
     path('api/register',RegisterView.as_view(), name='register'),
     path('admin/', redirect_to_admin),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 urlpatterns+=[#商品订单相关

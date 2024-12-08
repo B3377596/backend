@@ -84,14 +84,63 @@ export default {
   async created() {
     // 获取商品分类和产品
     this.fetchProducts();
-    const isLoggedIn = localStorage.getItem('islog') === 'true'; 
-    const userInfo = localStorage.getItem('user');
-    if (isLoggedIn && userInfo) {
-      const user = JSON.parse(userInfo);
-      this.$store.dispatch('user/login', user);
-    } 
+    const accessToken = localStorage.getItem('access_token');
+    const refreshToken = localStorage.getItem('refresh_token');
+    console.error(accessToken)
+  if (accessToken && refreshToken) {
+    try {
+      // 检查 access_token 是否有效
+      const isTokenValid = await this.checkAccessTokenValidity(accessToken);
+      console.error(isTokenValid)
+      if (isTokenValid) {
+        // 如果 access_token 有效，使用它并继续
+        const userInfo = localStorage.getItem('user');
+        if (userInfo) {
+          const user = JSON.parse(userInfo);
+          this.$store.dispatch('user/login', user);
+        }
+      } 
+    } catch (error) {
+      console.error("Error during token validation or refresh:", error);
+      this.logout();
+    }
+  } else {
+    // 没有 access_token 或 refresh_token，要求重新登录
+    this.logout();
+  }
   },
   methods: {
+    async checkAccessTokenValidity(accessToken) {
+    try {
+      const response = await axios.get('api/profile', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      return response.status === 200; // 如果请求成功，说明 token 有效
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        // 401 Unauthorized 说明 token 过期或无效
+        return false;
+      }
+      throw error;
+    }
+    },
+    async refreshAccessToken(refreshToken) {
+    try {
+      const response = await this.$axios.post('/api/token/refresh/', { refresh: refreshToken });
+      return response.data.access;
+    } catch (error) {
+      console.error('Failed to refresh access token:', error);
+      return null;
+    }
+    },
+    logout() {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('user_id');
+      localStorage.setItem('islog', false); 
+      this.$store.dispatch('user/logout');
+    },
     async fetchProducts(){
       try{
         const data=await fetchProducts();

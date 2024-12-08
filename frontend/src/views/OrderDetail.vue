@@ -263,11 +263,11 @@ export default {
             },
           }
         );
-        if (response.ok) {
+        if (response.status===200) {
           this.showReviewModal = false;
-          this.reviewContent = "";  
           this.rating = 5; 
           this.orderDetail.review_content=this.reviewContent
+          this.reviewContent = "";  
           alert('评价成功！');
         }
       } catch (error) {
